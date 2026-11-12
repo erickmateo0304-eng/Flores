@@ -1,0 +1,3435 @@
+/* ============================================================
+   Un jardín de estrellas — Estilos principales
+   Paleta y tipografías inspiradas en Van Gogh.
+   Capa de diseño: sin lógica de interacción.
+   ============================================================ */
+
+/* ---------- 1. Variables de la paleta ---------- */
+:root {
+  /* Paleta base (constitution/tech-stack.md) */
+  --color-noche: #0F1A3A;
+  --color-estrella: #F4D03F;
+  --color-lirio: #2E5A44;
+  --color-crema: #F9F6F0;
+
+  /* Derivados para superficies y textos */
+  --color-noche-suave: #16244d;
+  --color-noche-profunda: #080f26;
+  --color-crema-tenue: rgba(249, 246, 240, 0.72);
+  --color-crema-suave: rgba(249, 246, 240, 0.12);
+  --color-estrella-suave: rgba(244, 208, 63, 0.16);
+  --color-lirio-claro: #5f8f74;
+
+  /* Tipografías */
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-body: 'Montserrat', 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  /* Medidas y ritmo */
+  --max-width: 1120px;
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.75rem;
+  --space-lg: 3rem;
+  --space-xl: 5rem;
+  --header-height: 4.5rem;
+  --radius-lg: 1.5rem;
+  --radius-pill: 999px;
+
+  /* Movimiento */
+  --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --transition-base: all 0.3s ease;
+}
+
+/* ---------- 2. Reset básico ---------- */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Evita que el header fijo tape los títulos al navegar */
+  scroll-padding-top: var(--header-height);
+  /* Refuerzo: elimina cualquier scroll lateral en móviles estrechos */
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100vh;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-crema);
+  background-color: var(--color-noche);
+  overflow-x: hidden;
+  /* Cielo estrellado: capa fija de estrellas hecha con gradientes CSS */
+  background-image:
+    radial-gradient(1.4px 1.4px at 12% 18%, rgba(249, 246, 240, 0.9), transparent 60%),
+    radial-gradient(1.2px 1.2px at 27% 62%, rgba(244, 208, 63, 0.85), transparent 60%),
+    radial-gradient(1.6px 1.6px at 42% 12%, rgba(249, 246, 240, 0.75), transparent 60%),
+    radial-gradient(1px 1px at 58% 38%, rgba(249, 246, 240, 0.8), transparent 60%),
+    radial-gradient(1.5px 1.5px at 73% 22%, rgba(244, 208, 63, 0.7), transparent 60%),
+    radial-gradient(1.1px 1.1px at 86% 58%, rgba(249, 246, 240, 0.85), transparent 60%),
+    radial-gradient(1.3px 1.3px at 68% 78%, rgba(249, 246, 240, 0.6), transparent 60%),
+    radial-gradient(1px 1px at 18% 86%, rgba(244, 208, 63, 0.65), transparent 60%),
+    radial-gradient(1.2px 1.2px at 92% 88%, rgba(249, 246, 240, 0.55), transparent 60%),
+    radial-gradient(ellipse at 75% 0%, rgba(46, 90, 68, 0.35), transparent 55%),
+    linear-gradient(180deg, var(--color-noche-profunda) 0%, var(--color-noche) 45%, var(--color-noche-suave) 100%);
+  background-attachment: fixed;
+}
+
+/* Espiral luminosa muy sutil, homenaje a "La noche estrellada" */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(closest-side at 78% 14%, rgba(244, 208, 63, 0.20), transparent 70%),
+    radial-gradient(closest-side at 20% 78%, rgba(46, 90, 68, 0.28), transparent 70%),
+    radial-gradient(closest-side at 55% 45%, rgba(95, 143, 116, 0.12), transparent 70%);
+  animation: sky-breathe 14s ease-in-out infinite alternate;
+}
+
+/* Textura de óleo: finísimo grano para que el fondo no se sienta plano */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(249, 246, 240, 0.05) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(-45deg, rgba(8, 15, 38, 0.18) 0 1px, transparent 1px 6px);
+}
+
+main,
+.site-header,
+.site-footer {
+  position: relative;
+  z-index: 1;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Ninguna imagen debe desbordar ni ampliarse por encima de su tamaño real */
+img {
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-estrella);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--color-estrella);
+  color: var(--color-noche);
+}
+
+/* ---------- 3. Accesibilidad: salto al contenido ---------- */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-estrella);
+  color: var(--color-noche);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: top 0.25s ease;
+}
+
+.skip-link:focus {
+  top: 0.75rem;
+}
+
+/* ---------- 4. Header y navegación ---------- */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  transition: background-color 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease;
+}
+
+.site-header.is-scrolled {
+  background-color: rgba(8, 15, 38, 0.82);
+  box-shadow: 0 1px 0 rgba(249, 246, 240, 0.08), 0 12px 30px rgba(3, 8, 20, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  width: 100%;
+  max-width: var(--max-width);
+  min-height: var(--header-height);
+  margin: 0 auto;
+  padding: 0.75rem clamp(1.25rem, 4vw, 2.5rem);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  color: var(--color-crema);
+  white-space: nowrap;
+}
+
+.brand-star {
+  color: var(--color-estrella);
+  font-size: 1.1rem;
+  animation: star-pulse 4.5s ease-in-out infinite;
+}
+
+.brand-text {
+  opacity: 0.92;
+}
+
+.main-nav {
+  display: block;
+}
+
+.nav-list {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.9rem, 2.4vw, 1.9rem);
+}
+
+.nav-link {
+  position: relative;
+  display: inline-block;
+  padding: 0.35rem 0.15rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-crema-tenue);
+  transition: var(--transition-base);
+}
+
+/* Subrayado que crece desde el centro */
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-estrella);
+  transform: translateX(-50%);
+  transition: width 0.3s var(--ease-soft);
+}
+
+.nav-link:hover,
+.nav-link:focus-visible {
+  color: var(--color-crema);
+}
+
+.nav-link:hover::after,
+.nav-link:focus-visible::after,
+.nav-link.is-active::after {
+  width: 100%;
+}
+
+.nav-link.is-active {
+  color: var(--color-estrella);
+}
+
+/* ---------- 5. Hero / bienvenida ---------- */
+.hero-section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: calc(var(--header-height) + var(--space-xl)) clamp(1.5rem, 6vw, 4rem) var(--space-xl);
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Halo cálido detrás del título */
+.hero-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(78vw, 820px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  background:
+    radial-gradient(closest-side, rgba(244, 208, 63, 0.16), transparent 72%),
+    radial-gradient(closest-side, rgba(46, 90, 68, 0.22), transparent 78%);
+  filter: blur(6px);
+  animation: halo-drift 12s ease-in-out infinite alternate;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 54rem;
+}
+
+.hero-eyebrow {
+  margin-bottom: var(--space-md);
+  font-size: clamp(0.68rem, 2.4vw, 0.8rem);
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-estrella);
+}
+
+.hero-eyebrow::before,
+.hero-eyebrow::after {
+  content: "—";
+  margin: 0 0.75rem;
+  color: rgba(244, 208, 63, 0.45);
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.6rem, 8.5vw, 5.9rem);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: var(--color-crema);
+  text-wrap: balance;
+}
+
+.hero-title em {
+  display: inline-block;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--color-estrella);
+  /* Pincelada suave detrás de la palabra protagonista */
+  text-shadow: 0 0 38px rgba(244, 208, 63, 0.28);
+}
+
+.hero-dedication {
+  max-width: 38rem;
+  margin-top: var(--space-md);
+  font-size: clamp(0.95rem, 2.5vw, 1.08rem);
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--color-crema-tenue);
+  text-wrap: pretty;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+}
+
+/* ---------- 6. Botones ---------- */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0.85rem 1.9rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.3s var(--ease-soft), background-color 0.3s ease,
+    color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.button-primary {
+  background: var(--color-estrella);
+  color: var(--color-noche);
+  box-shadow: 0 14px 34px rgba(244, 208, 63, 0.22);
+}
+
+.button-primary:hover,
+.button-primary:focus-visible {
+  background: var(--color-crema);
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px rgba(244, 208, 63, 0.3);
+}
+
+.button-ghost {
+  border-color: rgba(249, 246, 240, 0.28);
+  background: transparent;
+  color: var(--color-crema);
+}
+
+.button-ghost:hover,
+.button-ghost:focus-visible {
+  border-color: var(--color-estrella);
+  color: var(--color-estrella);
+  background: var(--color-estrella-suave);
+  transform: translateY(-3px);
+}
+
+/* ---------- 7. Indicador de scroll ---------- */
+.scroll-cue {
+  position: absolute;
+  bottom: clamp(1.5rem, 4vh, 2.75rem);
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  transform: translateX(-50%);
+  color: var(--color-crema-tenue);
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.scroll-cue:hover,
+.scroll-cue:focus-visible {
+  color: var(--color-estrella);
+}
+
+.scroll-cue-text {
+  font-size: 0.64rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.scroll-cue-line {
+  position: relative;
+  display: block;
+  width: 1px;
+  height: 3rem;
+  overflow: hidden;
+  background: rgba(249, 246, 240, 0.18);
+}
+
+.scroll-cue-line::after {
+  content: "";
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--color-estrella);
+  animation: scroll-trace 2.6s ease-in-out infinite;
+}
+
+/* ---------- 8. Secciones compartidas ---------- */
+.section-inner {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 12vh, 8rem) clamp(1.5rem, 6vw, 4rem);
+}
+
+.section-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: var(--space-sm);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-estrella);
+}
+
+.section-kicker::before {
+  content: "";
+  width: 1.75rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.section-title {
+  max-width: 22ch;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.85rem, 5vw, 3.1rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--color-crema);
+  text-wrap: balance;
+}
+
+.section-text {
+  max-width: 46rem;
+  margin-top: var(--space-md);
+  font-size: clamp(0.94rem, 2.4vw, 1.02rem);
+  font-weight: 300;
+  color: var(--color-crema-tenue);
+  text-wrap: pretty;
+}
+
+/* ---------- 9. Prólogo ---------- */
+.prologue-section {
+  position: relative;
+  border-top: 1px solid rgba(249, 246, 240, 0.08);
+  border-bottom: 1px solid rgba(249, 246, 240, 0.08);
+  background:
+    linear-gradient(180deg, rgba(8, 15, 38, 0.5), rgba(8, 15, 38, 0.15)),
+    radial-gradient(ellipse at 85% 30%, rgba(46, 90, 68, 0.28), transparent 60%);
+}
+
+/* Tres pistas de flores, como una pequeña constelación */
+.flower-hint-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 3vw, 2.25rem);
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+}
+
+.flower-hint {
+  position: relative;
+  padding: 1.5rem 0 0;
+  border-top: 1px solid rgba(249, 246, 240, 0.14);
+}
+
+.flower-hint::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-estrella);
+  box-shadow: 0 0 14px rgba(244, 208, 63, 0.75);
+}
+
+.flower-hint-mark {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: rgba(249, 246, 240, 0.42);
+}
+
+.flower-hint-name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 3.2vw, 1.55rem);
+  color: var(--color-crema);
+}
+
+.flower-hint-note {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.84rem;
+  font-style: italic;
+  color: var(--color-lirio-claro);
+}
+
+/* ---------- 10. Secciones reservadas (jardín, galería, juegos) ---------- */
+.placeholder-section {
+  position: relative;
+  min-height: 62vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Halo decorativo que anticipa las futuras secciones */
+.placeholder-section::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -12%;
+  width: min(46vw, 460px);
+  aspect-ratio: 1;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  border: 1px solid rgba(244, 208, 63, 0.16);
+  box-shadow: inset 0 0 90px rgba(244, 208, 63, 0.07);
+  pointer-events: none;
+}
+
+.placeholder-section-alt::before {
+  right: auto;
+  left: -12%;
+  border-color: rgba(46, 90, 68, 0.4);
+  box-shadow: inset 0 0 90px rgba(46, 90, 68, 0.25);
+}
+
+.placeholder-section-alt .section-inner {
+  margin: 0 auto;
+  text-align: right;
+}
+
+.placeholder-section-alt .section-kicker {
+  flex-direction: row-reverse;
+}
+
+.placeholder-section-alt .section-title,
+.placeholder-section-alt .section-text {
+  margin-left: auto;
+}
+
+/* ---------- 11. Jardín interactivo ---------- */
+.garden-section {
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(249, 246, 240, 0.08);
+  border-bottom: 1px solid rgba(249, 246, 240, 0.08);
+  background:
+    linear-gradient(180deg, rgba(8, 15, 38, 0.42), rgba(8, 15, 38, 0.06) 45%, rgba(8, 15, 38, 0.42)),
+    radial-gradient(ellipse at 10% 6%, rgba(46, 90, 68, 0.3), transparent 58%);
+}
+
+/* Halo decorativo que dialoga con el resto de secciones */
+.garden-section::before {
+  content: "";
+  position: absolute;
+  top: 5rem;
+  right: -11rem;
+  width: min(44vw, 440px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid rgba(244, 208, 63, 0.14);
+  box-shadow: inset 0 0 90px rgba(244, 208, 63, 0.06);
+  pointer-events: none;
+}
+
+/* Cuadrícula responsiva: las columnas se ajustan solas al ancho */
+.jardin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: clamp(1rem, 2.4vw, 1.5rem);
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+}
+
+/* Tarjeta: recorta el zoom de la imagen para no invadir a sus vecinas.
+   Solo se animan transform y opacity, las propiedades que la GPU compone
+   sin recalcular layout ni repintar la imagen en cada frame. */
+.flor-card {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 1px solid rgba(249, 246, 240, 0.1);
+  border-radius: var(--radius-lg);
+  background: var(--color-noche-profunda);
+  box-shadow: 0 18px 40px rgba(3, 8, 20, 0.35);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Inclinación 3D: JS fija la transformación y esta transición la suaviza.
+   Solo se activa al mover el cursor o el dedo, sin tocar la entrada. */
+.flor-card.is-tilting {
+  transition: transform 0.16s ease-out;
+  box-shadow:
+    0 24px 52px rgba(3, 8, 20, 0.48),
+    0 0 0 1px rgba(244, 208, 63, 0.22);
+}
+
+/* Resplandor interior que enciende la tarjeta al acercarse */
+.flor-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 50% 16%, rgba(244, 208, 63, 0.22), transparent 62%),
+    linear-gradient(180deg, rgba(8, 15, 38, 0) 55%, rgba(8, 15, 38, 0.28) 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(244, 208, 63, 0.45),
+    inset 0 -90px 90px rgba(8, 15, 38, 0.35);
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-soft);
+  pointer-events: none;
+}
+
+.flor-card:hover::after,
+.flor-card:focus-within::after {
+  opacity: 1;
+}
+
+/* Imagen: el zoom usa solo transform (GPU). Sin filter ni cambios de
+   tamaño: el navegador no recalcula estilos ni repinta la foto al pasar
+   el cursor. La imagen se limita a su contenedor y conserva su proporción. */
+.flor-imagen {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  transition: transform 0.7s var(--ease-soft);
+  will-change: transform;
+}
+
+.flor-card:hover .flor-imagen,
+.flor-card:focus-within .flor-imagen {
+  transform: scale(1.06);
+}
+
+/* Ficha poética: oculta abajo, sube al pasar el cursor */
+.flor-caption {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 2.75rem 1.25rem 1.25rem;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(8, 15, 38, 0.72) 38%,
+    rgba(8, 15, 38, 0.95) 100%
+  );
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.45s ease, transform 0.45s var(--ease-soft);
+  pointer-events: none;
+}
+
+.flor-card:hover .flor-caption,
+.flor-card:focus-within .flor-caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.flor-nombre {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.1rem, 2.6vw, 1.35rem);
+  line-height: 1.25;
+  color: var(--color-crema);
+}
+
+.flor-frase {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-estrella);
+}
+
+/* Entrada escalonada de las 15 tarjetas (solo si JS está activo).
+   Se declara con más especificidad que .js-enabled .reveal para que
+   el retardo no lo borre la transición general. */
+.js-enabled .jardin-grid .flor-card:nth-child(1) { transition-delay: 0.02s; }
+.js-enabled .jardin-grid .flor-card:nth-child(2) { transition-delay: 0.07s; }
+.js-enabled .jardin-grid .flor-card:nth-child(3) { transition-delay: 0.12s; }
+.js-enabled .jardin-grid .flor-card:nth-child(4) { transition-delay: 0.17s; }
+.js-enabled .jardin-grid .flor-card:nth-child(5) { transition-delay: 0.22s; }
+.js-enabled .jardin-grid .flor-card:nth-child(6) { transition-delay: 0.27s; }
+.js-enabled .jardin-grid .flor-card:nth-child(7) { transition-delay: 0.32s; }
+.js-enabled .jardin-grid .flor-card:nth-child(8) { transition-delay: 0.37s; }
+.js-enabled .jardin-grid .flor-card:nth-child(9) { transition-delay: 0.42s; }
+.js-enabled .jardin-grid .flor-card:nth-child(10) { transition-delay: 0.47s; }
+.js-enabled .jardin-grid .flor-card:nth-child(11) { transition-delay: 0.52s; }
+.js-enabled .jardin-grid .flor-card:nth-child(12) { transition-delay: 0.57s; }
+.js-enabled .jardin-grid .flor-card:nth-child(13) { transition-delay: 0.62s; }
+.js-enabled .jardin-grid .flor-card:nth-child(14) { transition-delay: 0.67s; }
+.js-enabled .jardin-grid .flor-card:nth-child(15) { transition-delay: 0.72s; }
+
+/* Respaldo visual si una foto no carga: la tarjeta sigue siendo navegable */
+.flor-card.is-missing {
+  background:
+    radial-gradient(circle at 50% 42%, rgba(244, 208, 63, 0.18), transparent 62%),
+    linear-gradient(160deg, var(--color-noche-suave), var(--color-noche-profunda));
+}
+
+.flor-card.is-missing .flor-imagen {
+  display: none;
+}
+
+.flor-card.is-missing::before {
+  content: "✿";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 3.25rem;
+  color: var(--color-estrella);
+  opacity: 0.75;
+}
+
+/* En pantallas táctiles no existe el hover: mostramos la ficha siempre */
+@media (hover: none) {
+  .flor-caption {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- 12. Galería de arte (Van Gogh) ---------- */
+.gallery-section {
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(249, 246, 240, 0.08);
+  border-bottom: 1px solid rgba(249, 246, 240, 0.08);
+  background:
+    radial-gradient(ellipse at 50% -10%, rgba(244, 208, 63, 0.12), transparent 58%),
+    radial-gradient(ellipse at 85% 110%, rgba(46, 90, 68, 0.24), transparent 60%),
+    linear-gradient(180deg, rgba(8, 15, 38, 0.72), rgba(4, 8, 20, 0.9));
+}
+
+/* Velo de textura, como la pared de un museo */
+.gallery-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(249, 246, 240, 0.018) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(249, 246, 240, 0.012) 0 1px, transparent 1px 4px);
+}
+
+.gallery-section .section-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.galeria-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+}
+
+.obra-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+/* La segunda obra entra un instante después que la primera */
+.js-enabled .galeria-grid .obra-card:nth-child(2) {
+  transition-delay: 0.18s;
+}
+
+.obra-cabecera {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.obra-numero {
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-estrella);
+}
+
+.obra-titulo {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 3.4vw, 2.15rem);
+  line-height: 1.15;
+  color: var(--color-crema);
+}
+
+.obra-datos {
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-crema-tenue);
+}
+
+/* Marco de museo: moldura dorada y sombra profunda */
+.obra-marco {
+  position: relative;
+  padding: clamp(0.55rem, 1.3vw, 0.95rem);
+  border: 1px solid rgba(244, 208, 63, 0.32);
+  border-radius: 0.35rem;
+  background:
+    linear-gradient(140deg, rgba(244, 208, 63, 0.16), rgba(8, 15, 38, 0.94) 42%, rgba(46, 90, 68, 0.22));
+  box-shadow:
+    0 28px 60px rgba(2, 6, 16, 0.55),
+    inset 0 0 0 1px rgba(244, 208, 63, 0.1);
+}
+
+/* Brillo dorado que recorre el borde del marco sin parar. */
+.obra-marco::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: 2;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    110deg,
+    transparent 18%,
+    rgba(244, 208, 63, 0.15) 34%,
+    rgba(255, 250, 226, 0.95) 50%,
+    rgba(244, 208, 63, 0.15) 66%,
+    transparent 82%
+  );
+  background-size: 250% 100%;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: brillo-marco 6.5s linear infinite;
+}
+
+.obra-area {
+  position: relative;
+}
+
+.obra-abrir {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0.15rem;
+  background: var(--color-noche-profunda);
+  cursor: zoom-in;
+}
+
+/* Aviso discreto de que el cuadro se puede ampliar */
+.obra-abrir::after {
+  content: "Ampliar ⤢";
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 2;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid rgba(244, 208, 63, 0.35);
+  border-radius: var(--radius-pill);
+  background: rgba(8, 15, 38, 0.82);
+  color: var(--color-estrella);
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.35s ease, transform 0.35s var(--ease-soft);
+}
+
+.obra-abrir:hover::after,
+.obra-abrir:focus-visible::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.obra-imagen {
+  width: 100%;
+  height: auto;
+  filter: saturate(1.02);
+  transform-origin: 52% 48%;
+  animation: ken-burns 24s ease-in-out infinite alternate;
+  transition: filter 0.6s ease;
+  will-change: transform;
+}
+
+.obra-abrir:hover .obra-imagen,
+.obra-abrir:focus-visible .obra-imagen {
+  filter: saturate(1.08) brightness(1.04);
+}
+
+.obra-pie {
+  font-size: 0.72rem;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: rgba(249, 246, 240, 0.55);
+}
+
+/* Respaldo visual si una obra no carga: el marco sigue siendo navegable */
+.obra-card.is-missing .obra-imagen {
+  display: none;
+}
+
+.obra-card.is-missing .obra-abrir {
+  aspect-ratio: 4 / 3;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(244, 208, 63, 0.16), transparent 60%),
+    linear-gradient(160deg, var(--color-noche-suave), var(--color-noche-profunda));
+}
+
+.obra-card.is-missing .obra-abrir::before {
+  content: "✿  La obra no pudo cargarse";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--color-estrella);
+}
+
+/* Hotspots: puntos dorados que laten sobre la obra */
+.hotspots {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.hotspot {
+  position: absolute;
+  width: 1.3rem;
+  height: 1.3rem;
+  padding: 0;
+  border: 1px solid rgba(15, 26, 58, 0.7);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff8d0, var(--color-estrella) 58%, #c9a227 100%);
+  box-shadow:
+    0 0 0 4px rgba(244, 208, 63, 0.16),
+    0 0 18px rgba(244, 208, 63, 0.55);
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform 0.3s var(--ease-soft), box-shadow 0.3s ease;
+}
+
+/* Anillo que late suavemente alrededor del punto */
+.hotspot::before {
+  content: "";
+  position: absolute;
+  inset: -0.5rem;
+  border: 1px solid rgba(244, 208, 63, 0.55);
+  border-radius: 50%;
+  animation: hotspot-pulse 2.8s ease-out infinite;
+}
+
+.hotspot:hover,
+.hotspot:focus-visible {
+  transform: translate(-50%, -50%) scale(1.18);
+  box-shadow:
+    0 0 0 5px rgba(244, 208, 63, 0.24),
+    0 0 24px rgba(244, 208, 63, 0.75);
+}
+
+/* Posiciones sobre cada cuadro, en % del área de la imagen */
+.hotspot--lirio-blanco { left: 15.5%; top: 27%; }
+.hotspot--soles { left: 10%; top: 8%; }
+.hotspot--luna { left: 89%; top: 12%; }
+.hotspot--remolino { left: 47%; top: 30%; }
+.hotspot--pueblo { left: 55%; top: 82%; }
+
+/* Tooltip poético */
+.hotspot-tooltip {
+  position: absolute;
+  bottom: calc(100% + 0.85rem);
+  left: 50%;
+  z-index: 4;
+  width: max-content;
+  max-width: min(14rem, 54vw);
+  padding: 0.65rem 0.85rem;
+  border: 1px solid rgba(244, 208, 63, 0.35);
+  border-radius: 0.55rem;
+  background: rgba(8, 15, 38, 0.97);
+  color: var(--color-crema);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  text-align: center;
+  box-shadow: 0 14px 32px rgba(2, 6, 16, 0.55);
+  opacity: 0;
+  transform: translate(-50%, 6px);
+  transition: opacity 0.3s ease, transform 0.3s var(--ease-soft);
+  pointer-events: none;
+}
+
+.hotspot:hover .hotspot-tooltip,
+.hotspot:focus-visible .hotspot-tooltip,
+.hotspot.is-activo .hotspot-tooltip {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* Variantes para que la frase no se salga del marco */
+.hotspot--abajo .hotspot-tooltip {
+  top: calc(100% + 0.85rem);
+  bottom: auto;
+}
+
+.hotspot--izquierda .hotspot-tooltip {
+  left: -0.35rem;
+  transform: translate(0, 6px);
+}
+
+.hotspot--derecha .hotspot-tooltip {
+  right: -0.35rem;
+  left: auto;
+  transform: translate(0, 6px);
+}
+
+.hotspot--izquierda:hover .hotspot-tooltip,
+.hotspot--izquierda:focus-visible .hotspot-tooltip,
+.hotspot--izquierda.is-activo .hotspot-tooltip,
+.hotspot--derecha:hover .hotspot-tooltip,
+.hotspot--derecha:focus-visible .hotspot-tooltip,
+.hotspot--derecha.is-activo .hotspot-tooltip {
+  transform: translate(0, 0);
+}
+
+.galeria-nota {
+  margin-top: clamp(2rem, 4vw, 3rem);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.95rem;
+  text-align: center;
+  color: var(--color-estrella);
+}
+
+/* ---------- 13. Juegos y magia ---------- */
+.juegos-section {
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(249, 246, 240, 0.08);
+  border-bottom: 1px solid rgba(249, 246, 240, 0.08);
+  background:
+    radial-gradient(ellipse at 50% -8%, rgba(244, 208, 63, 0.13), transparent 55%),
+    radial-gradient(ellipse at 12% 88%, rgba(46, 90, 68, 0.3), transparent 58%),
+    radial-gradient(ellipse at 92% 70%, rgba(95, 143, 116, 0.16), transparent 55%),
+    linear-gradient(180deg, rgba(8, 15, 38, 0.55), rgba(4, 8, 20, 0.86));
+}
+
+/* Halo que dialoga con la galería y anticipa la magia */
+.juegos-section::before {
+  content: "";
+  position: absolute;
+  top: 18%;
+  left: -14%;
+  width: min(48vw, 480px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(244, 208, 63, 0.12);
+  border-radius: 50%;
+  box-shadow: inset 0 0 100px rgba(244, 208, 63, 0.06);
+  pointer-events: none;
+}
+
+.juegos-inner {
+  position: relative;
+  z-index: 2;
+}
+
+/* Lienzo de la lluvia: cubre la sección y nunca intercepta el toque.
+   Va por encima del contenido para que los pétalos se vean de verdad,
+   pero con pointer-events: none el juego sigue siendo totalmente usable. */
+.petalos-container {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Pétalo: forma de hoja y animación de caída, definidas en CSS */
+.petalo {
+  position: absolute;
+  top: -10%;
+  left: var(--petalo-x, 50%);
+  width: var(--petalo-tamano, 14px);
+  aspect-ratio: 3 / 2;
+  border-radius: 68% 32% 62% 38% / 55% 62% 38% 45%;
+  opacity: 0;
+  filter: blur(0.15px);
+  box-shadow: 0 0 10px rgba(244, 208, 63, 0.1);
+  animation: caer var(--petalo-duracion, 9s) linear var(--petalo-retraso, 0s) forwards;
+  will-change: transform, opacity;
+}
+
+.petalo--crema {
+  background: linear-gradient(135deg, #fffaf0, #efd9c4);
+}
+
+.petalo--estrella {
+  background: linear-gradient(135deg, #ffeb9c, #f4d03f);
+}
+
+.petalo--lirio {
+  background: linear-gradient(135deg, #b9ccff, #6f8fe0);
+}
+
+.petalo--rosa {
+  background: linear-gradient(135deg, #ffd7e6, #f27fa5);
+}
+
+/* Panel del memorama, como una mesa de madera bajo la noche */
+.memorama-panel {
+  position: relative;
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+  padding: clamp(1.1rem, 3vw, 2.2rem);
+  border: 1px solid rgba(244, 208, 63, 0.2);
+  border-radius: clamp(1.1rem, 3vw, 1.9rem);
+  background:
+    radial-gradient(ellipse at 12% 0%, rgba(244, 208, 63, 0.1), transparent 55%),
+    radial-gradient(ellipse at 92% 100%, rgba(46, 90, 68, 0.38), transparent 62%),
+    linear-gradient(165deg, rgba(22, 36, 77, 0.86), rgba(8, 15, 38, 0.95));
+  box-shadow:
+    0 30px 70px rgba(2, 6, 16, 0.5),
+    inset 0 0 0 1px rgba(249, 246, 240, 0.04);
+  transition: border-color 0.6s ease, box-shadow 0.6s ease;
+}
+
+/* Velo de pinceladas finas sobre el panel */
+.memorama-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0.45;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(249, 246, 240, 0.02) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(-45deg, rgba(8, 15, 38, 0.14) 0 1px, transparent 1px 7px);
+}
+
+/* La celebración tiñe el panel de oro */
+.memorama-panel.is-ganado {
+  border-color: rgba(244, 208, 63, 0.55);
+  box-shadow:
+    0 30px 80px rgba(2, 6, 16, 0.55),
+    0 0 60px rgba(244, 208, 63, 0.14),
+    inset 0 0 0 1px rgba(244, 208, 63, 0.22);
+}
+
+.memorama-barra {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+}
+
+.memorama-marcador {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(1.25rem, 4vw, 2.75rem);
+}
+
+.marcador-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.marcador-etiqueta {
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-crema-tenue);
+}
+
+.marcador-valor {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.1rem);
+  line-height: 1;
+  color: var(--color-estrella);
+  font-variant-numeric: tabular-nums;
+}
+
+.marcador-total {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: rgba(249, 246, 240, 0.55);
+}
+
+/* Latido breve del contador al sumar un intento */
+.marcador-valor.is-latido {
+  animation: marcador-latido 0.45s var(--ease-soft);
+}
+
+.memorama-reiniciar {
+  min-height: 2.7rem;
+  padding: 0.6rem 1.35rem;
+  font-size: 0.7rem;
+}
+
+.memorama-ayuda {
+  position: relative;
+  z-index: 1;
+  margin-top: 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: rgba(249, 246, 240, 0.62);
+}
+
+/* Tablero: 3 columnas en móvil, 4 en escritorio */
+.memorama-board {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.45rem, 1.8vw, 0.9rem);
+  width: 100%;
+  max-width: 46rem;
+  margin: clamp(1.25rem, 3vw, 2rem) auto 0;
+  perspective: 1400px;
+}
+
+@media (min-width: 720px) {
+  .memorama-board {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(0.7rem, 1.6vw, 1.1rem);
+  }
+}
+
+/* Carta: botón accesible con volteo 3D en CSS */
+.carta {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  padding: 0;
+  border: 0;
+  border-radius: clamp(0.55rem, 1.4vw, 0.9rem);
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.carta-interior {
+  position: absolute;
+  inset: 0;
+  display: block;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transition: transform 0.6s var(--ease-soft);
+}
+
+.carta.is-volteada .carta-interior,
+.carta.is-encontrada .carta-interior {
+  transform: rotateY(180deg);
+}
+
+/* Inclinación sutil al pasar el cursor (solo en dispositivos con hover) */
+@media (hover: hover) {
+  .carta:not(.is-volteada):not(.is-encontrada):hover .carta-interior {
+    transform: translateY(-4px) rotateY(-6deg);
+  }
+}
+
+.carta-cara {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  overflow: hidden;
+  border: 1px solid rgba(249, 246, 240, 0.14);
+  border-radius: inherit;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Dorso: cielo nocturno con espiral y estrella, homenaje a Van Gogh */
+.carta-dorso {
+  background:
+    radial-gradient(circle at 72% 22%, rgba(244, 208, 63, 0.3), transparent 24%),
+    radial-gradient(circle at 26% 72%, rgba(95, 143, 116, 0.36), transparent 32%),
+    repeating-radial-gradient(circle at 50% 50%, rgba(249, 246, 240, 0.05) 0 1px, transparent 1px 7px),
+    linear-gradient(155deg, #1b2f5e, #0a1330 55%, #16244d);
+  box-shadow: inset 0 0 26px rgba(2, 6, 16, 0.55);
+}
+
+.dorso-espiral {
+  position: absolute;
+  width: 64%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(244, 208, 63, 0.32);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 18px rgba(244, 208, 63, 0.12),
+    0 0 18px rgba(244, 208, 63, 0.08);
+}
+
+.dorso-espiral::before {
+  content: "";
+  position: absolute;
+  inset: 18%;
+  border: 1px dashed rgba(249, 246, 240, 0.22);
+  border-radius: 50%;
+}
+
+.dorso-espiral::after {
+  content: "";
+  position: absolute;
+  inset: 38%;
+  border: 1px solid rgba(244, 208, 63, 0.42);
+  border-radius: 50%;
+}
+
+.dorso-estrella {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(1rem, 4vw, 1.9rem);
+  line-height: 1;
+  color: var(--color-estrella);
+  text-shadow: 0 0 16px rgba(244, 208, 63, 0.65);
+  transition: transform 0.5s var(--ease-soft);
+}
+
+.carta:hover .dorso-estrella {
+  transform: scale(1.12) rotate(90deg);
+}
+
+/* Frente: la flor pintada, con un halo de color propio */
+.carta-frente {
+  transform: rotateY(180deg);
+  padding: 0.55rem 0.45rem 0.65rem;
+  background:
+    radial-gradient(circle at 50% 38%, var(--halo-flor, rgba(244, 208, 63, 0.18)), transparent 64%),
+    linear-gradient(170deg, rgba(249, 246, 240, 0.08), rgba(8, 15, 38, 0.92) 72%),
+    var(--color-noche-suave);
+  box-shadow: inset 0 0 0 1px rgba(244, 208, 63, 0.16);
+}
+
+/* Cada flor tiñe su propia carta */
+.carta[data-flor="lirio"] .carta-frente { --halo-flor: rgba(125, 155, 234, 0.3); }
+.carta[data-flor="tulipan"] .carta-frente { --halo-flor: rgba(244, 122, 53, 0.28); }
+.carta[data-flor="amapola"] .carta-frente { --halo-flor: rgba(230, 58, 36, 0.28); }
+.carta[data-flor="girasol"] .carta-frente { --halo-flor: rgba(244, 194, 31, 0.3); }
+.carta[data-flor="margarita"] .carta-frente { --halo-flor: rgba(244, 238, 222, 0.26); }
+.carta[data-flor="rosa"] .carta-frente { --halo-flor: rgba(242, 127, 165, 0.3); }
+
+.carta-flor {
+  width: 86%;
+  height: auto;
+  aspect-ratio: 1;
+  filter: drop-shadow(0 4px 8px rgba(2, 6, 16, 0.45));
+}
+
+.carta-nombre {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(0.58rem, 1.6vw, 0.8rem);
+  line-height: 1;
+  color: rgba(249, 246, 240, 0.82);
+}
+
+/* Pareja encontrada: se queda boca arriba y se enciende */
+.carta.is-encontrada {
+  cursor: default;
+}
+
+.carta.is-encontrada .carta-frente {
+  border-color: rgba(244, 208, 63, 0.7);
+  box-shadow:
+    inset 0 0 0 2px rgba(244, 208, 63, 0.5),
+    0 0 24px rgba(244, 208, 63, 0.28);
+}
+
+.carta.is-encontrada .carta-flor {
+  animation: flor-festeja 1.2s var(--ease-soft);
+}
+
+/* Error: un pequeño temblor, sin romper el volteo */
+.carta.is-error {
+  animation: carta-error 0.4s ease;
+}
+
+/* Mensaje de victoria */
+.memorama-mensaje {
+  position: relative;
+  z-index: 1;
+  max-width: 34rem;
+  margin: 1.4rem auto 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1rem, 2.6vw, 1.25rem);
+  line-height: 1.55;
+  text-align: center;
+  color: var(--color-estrella);
+  text-wrap: balance;
+}
+
+.memorama-mensaje:empty {
+  display: none;
+}
+
+.memorama-panel.is-ganado .memorama-mensaje {
+  animation: mensaje-in 0.7s var(--ease-soft);
+}
+
+.memorama-mensaje strong {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--color-crema);
+}
+
+/* ---------- 14. Modal de zoom ---------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(0.9rem, 3vw, 2rem);
+}
+
+.modal.oculto {
+  display: none;
+}
+
+.modal-fondo {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(22, 36, 77, 0.55), transparent 65%),
+    rgba(4, 8, 20, 0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: zoom-out;
+}
+
+.modal-contenido {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: min(1180px, 100%);
+  max-height: 100%;
+  animation: modal-in 0.35s var(--ease-soft);
+}
+
+.modal-barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  padding: 0 0.25rem 1rem;
+}
+
+.modal-titulo {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.05rem, 2.4vw, 1.5rem);
+  color: var(--color-crema);
+}
+
+.modal-controles {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.7rem;
+  height: 2.7rem;
+  border: 1px solid rgba(249, 246, 240, 0.24);
+  border-radius: 50%;
+  background: rgba(249, 246, 240, 0.06);
+  color: var(--color-crema);
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.25s ease, background-color 0.25s ease, color 0.25s ease,
+    opacity 0.25s ease;
+}
+
+.modal-boton:hover,
+.modal-boton:focus-visible {
+  border-color: var(--color-estrella);
+  background: rgba(244, 208, 63, 0.14);
+  color: var(--color-estrella);
+}
+
+.modal-boton:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.modal-cerrar {
+  margin-left: 0.4rem;
+  border-color: rgba(244, 208, 63, 0.45);
+}
+
+.modal-nivel {
+  min-width: 3.4rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-align: center;
+  color: var(--color-crema-tenue);
+}
+
+.modal-escena {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.modal-escena.puede-arrastrar {
+  cursor: grab;
+}
+
+.modal-escena.is-arrastrando {
+  cursor: grabbing;
+}
+
+.modal-lienzo {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  transform: translate(var(--pan-x, 0px), var(--pan-y, 0px)) scale(var(--zoom, 1));
+  transform-origin: center center;
+  transition: transform 0.22s var(--ease-soft);
+  will-change: transform;
+}
+
+.modal-escena.is-arrastrando .modal-lienzo {
+  transition: none;
+}
+
+.modal-imagen {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: min(90vw, 1080px);
+  max-height: 68vh;
+  border: 1px solid rgba(244, 208, 63, 0.28);
+  box-shadow: 0 30px 80px rgba(2, 6, 16, 0.7);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Respaldo si la obra no carga dentro del modal */
+.modal-lienzo.is-missing .modal-imagen {
+  display: none;
+}
+
+.modal-lienzo.is-missing::after {
+  content: "✿  La obra no pudo cargarse";
+  display: grid;
+  place-items: center;
+  width: min(80vw, 520px);
+  height: 45vh;
+  border: 1px solid rgba(244, 208, 63, 0.3);
+  background: linear-gradient(160deg, var(--color-noche-suave), var(--color-noche-profunda));
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--color-estrella);
+}
+
+.modal-ayuda {
+  padding-top: 0.9rem;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-align: center;
+  text-transform: uppercase;
+  color: rgba(249, 246, 240, 0.5);
+}
+
+body.modal-abierto {
+  overflow: hidden;
+}
+
+/* ---------- 15. Footer ---------- */
+.site-footer {
+  padding: clamp(2.5rem, 6vw, 4rem) clamp(1.5rem, 6vw, 4rem);
+  border-top: 1px solid rgba(249, 246, 240, 0.1);
+  text-align: center;
+  background: rgba(8, 15, 38, 0.55);
+}
+
+.footer-message {
+  max-width: 32rem;
+  margin: 0 auto;
+  font-size: 0.86rem;
+  font-weight: 300;
+  color: var(--color-crema-tenue);
+}
+
+.footer-signature {
+  margin-top: 0.75rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--color-estrella);
+}
+
+.footer-signature span {
+  display: inline-block;
+  animation: heart-beat 3.6s ease-in-out infinite;
+}
+
+/* ---------- 16. Animaciones de entrada ---------- */
+/* Las clases .fade-in y .slide-up son los nombres canónicos del plan.
+   .reveal se usa en el HTML como gancho del IntersectionObserver.
+   El estado oculto solo se aplica si JS está activo (html.js-enabled),
+   de modo que la página siga siendo legible sin JavaScript. */
+.js-enabled .reveal,
+.js-enabled .fade-in,
+.js-enabled .slide-up {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.9s var(--ease-soft), transform 0.9s var(--ease-soft);
+  will-change: opacity, transform;
+}
+
+.js-enabled .reveal.visible,
+.js-enabled .fade-in.visible,
+.js-enabled .slide-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Entrada escalonada del hero, sin estilos en línea */
+.reveal-delay-1 { transition-delay: 0.05s; }
+.reveal-delay-2 { transition-delay: 0.18s; }
+.reveal-delay-3 { transition-delay: 0.32s; }
+.reveal-delay-4 { transition-delay: 0.46s; }
+.reveal-delay-5 { transition-delay: 0.62s; }
+
+/* ---------- 17. Keyframes ---------- */
+/* Ken Burns: la pintura respira con un zoom y un paneo lentísimos. */
+@keyframes ken-burns {
+  from {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.11) translate3d(-2.2%, -1.6%, 0);
+  }
+}
+
+/* Luz que recorre la moldura dorada de las obras. */
+@keyframes brillo-marco {
+  from {
+    background-position: 210% 0;
+  }
+  to {
+    background-position: -110% 0;
+  }
+}
+
+@keyframes sky-breathe {
+  from {
+    opacity: 0.75;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(-1.5%, 1.5%, 0) scale(1.04);
+  }
+}
+
+@keyframes halo-drift {
+  from {
+    transform: translate(-50%, -50%) scale(0.96);
+    opacity: 0.8;
+  }
+  to {
+    transform: translate(-50%, -48%) scale(1.06);
+    opacity: 1;
+  }
+}
+
+@keyframes star-pulse {
+  0%, 100% {
+    opacity: 0.55;
+    transform: scale(0.92) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.12) rotate(90deg);
+  }
+}
+
+@keyframes scroll-trace {
+  0% {
+    top: -100%;
+  }
+  55%,
+  100% {
+    top: 100%;
+  }
+}
+
+@keyframes heart-beat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  12% {
+    transform: scale(1.16);
+  }
+  24% {
+    transform: scale(1);
+  }
+}
+
+/* Anillo dorado que se expande y se desvanece sobre los hotspots */
+@keyframes hotspot-pulse {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.9;
+  }
+  70% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+/* Entrada suave del modal de zoom */
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Caída de pétalos: descienden, se mecen y giran.
+   Los valores llegan como variables CSS desde main.js.
+   --petalo-recorrido se calcula con la altura real de la sección. */
+@keyframes caer {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -12vh, 0) rotate(0deg) scale(1);
+  }
+  8% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.85;
+    transform: translate3d(calc(var(--petalo-deriva, 60px) * 0.35), calc(var(--petalo-recorrido, 112vh) * 0.48), 0)
+      rotate(calc(var(--petalo-giro, 240deg) * 0.45)) scale(1.05);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--petalo-deriva, 60px), var(--petalo-recorrido, 112vh), 0)
+      rotate(var(--petalo-giro, 240deg)) scale(0.95);
+  }
+}
+
+/* Latido del contador de intentos */
+@keyframes marcador-latido {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.18);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* La flor celebra la pareja encontrada */
+@keyframes flor-festeja {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  35% {
+    transform: scale(1.14) rotate(-5deg);
+  }
+  70% {
+    transform: scale(1.06) rotate(4deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* Temblor breve cuando las dos cartas no coinciden */
+@keyframes carta-error {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+  75% {
+    transform: translateX(-2px);
+  }
+}
+
+/* Aparición del mensaje de victoria */
+@keyframes mensaje-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- 18. Responsive ---------- */
+/* Galería: una sola columna en pantallas estrechas */
+@media (max-width: 860px) {
+  .galeria-grid {
+    grid-template-columns: 1fr;
+    gap: 2.75rem;
+  }
+}
+
+/* Escritorio amplio: cuatro columnas exactas para el jardín */
+@media (min-width: 1200px) {
+  .jardin-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .header-inner {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.35rem;
+    padding-top: 0.7rem;
+    padding-bottom: 0.6rem;
+  }
+
+  .brand {
+    font-size: 0.95rem;
+  }
+
+  .nav-list {
+    gap: 1.15rem;
+  }
+
+  .nav-link {
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+  }
+
+  .hero-section {
+    padding-top: calc(var(--header-height) + 6rem);
+  }
+
+  .hero-eyebrow::before,
+  .hero-eyebrow::after {
+    margin: 0 0.45rem;
+  }
+
+  .flower-hint-list {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .placeholder-section {
+    min-height: 52vh;
+  }
+
+  .placeholder-section-alt .section-inner {
+    text-align: left;
+  }
+
+  .placeholder-section-alt .section-kicker {
+    flex-direction: row;
+  }
+
+  .placeholder-section-alt .section-title,
+  .placeholder-section-alt .section-text {
+    margin-left: 0;
+  }
+
+  .placeholder-section::before {
+    width: min(70vw, 320px);
+    right: -25%;
+    opacity: 0.7;
+  }
+
+  .placeholder-section-alt::before {
+    right: auto;
+    left: -25%;
+  }
+
+  .modal-barra {
+    align-items: flex-start;
+  }
+
+  .modal-imagen {
+    max-height: 58vh;
+  }
+
+  .modal-ayuda {
+    font-size: 0.58rem;
+  }
+
+  .scroll-cue-text {
+    font-size: 0.58rem;
+  }
+
+  /* Juegos: el marcador respira mejor en pantallas medianas */
+  .juegos-section::before {
+    width: min(64vw, 320px);
+    left: -28%;
+    opacity: 0.7;
+  }
+
+  .memorama-barra {
+    align-items: flex-start;
+  }
+
+  .memorama-ayuda {
+    font-size: 0.76rem;
+  }
+}
+
+@media (max-width: 560px) {
+  /* En móviles estrechos el aviso flotante taparía los botones.
+     El botón "Entrar al jardín" ya invita a seguir explorando. */
+  .scroll-cue {
+    display: none;
+  }
+
+  .modal {
+    padding: 0.7rem;
+  }
+
+  .modal-titulo {
+    width: 100%;
+  }
+
+  .modal-boton {
+    width: 2.4rem;
+    height: 2.4rem;
+    font-size: 1rem;
+  }
+
+  .modal-nivel {
+    min-width: 2.9rem;
+    font-size: 0.64rem;
+  }
+
+  .hotspot {
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+
+  .hotspot-tooltip {
+    font-size: 0.82rem;
+  }
+
+  /* Juegos: barra apilada y cartas más compactas */
+  .memorama-barra {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .memorama-marcador {
+    justify-content: space-between;
+  }
+
+  .memorama-reiniciar {
+    width: 100%;
+  }
+
+  .carta-frente {
+    gap: 0.2rem;
+    padding: 0.35rem 0.3rem 0.45rem;
+  }
+
+  .carta-nombre {
+    font-size: 0.6rem;
+  }
+
+  .dorso-estrella {
+    font-size: 1.15rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .brand-text {
+    font-size: 0.88rem;
+  }
+
+  .nav-list {
+    gap: 0.9rem;
+  }
+
+  .nav-link {
+    font-size: 0.6rem;
+  }
+
+  .button {
+    width: 100%;
+    max-width: 19rem;
+  }
+}
+
+/* Pantallas con poca altura (móvil horizontal) */
+@media (max-height: 560px) and (orientation: landscape) {
+  .hero-section {
+    min-height: auto;
+    padding-top: calc(var(--header-height) + 7rem);
+    padding-bottom: 4rem;
+  }
+
+  .scroll-cue {
+    display: none;
+  }
+}
+
+/* ---------- 19. Accesibilidad: movimiento reducido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .js-enabled .reveal,
+  .js-enabled .fade-in,
+  .js-enabled .slide-up {
+    opacity: 1;
+    transform: none;
+  }
+
+  .scroll-cue-line::after {
+    display: none;
+  }
+
+  /* Sin lluvia de pétalos: la sección sigue siendo navegable y bella */
+  .petalos-container {
+    display: none;
+  }
+}
+
+/* ============================================================
+   20. Intro y juego de recolección (Feature 006)
+   ============================================================ */
+
+/* El contenido principal es visible por defecto. Solo se oculta
+   cuando juego.js confirma que puede arrancar (html.juego-pendiente):
+   así, si el juego falla, la página nunca se queda bloqueada. */
+.contenido-principal {
+  position: relative;
+}
+
+html.juego-pendiente,
+html.juego-pendiente body {
+  overflow: hidden;
+}
+
+html.juego-pendiente .contenido-principal {
+  display: none;
+}
+
+/* Entrada suave de la página principal al ganar el juego */
+.contenido-principal.is-revelado {
+  animation: contenido-in 1.4s var(--ease-soft) both;
+}
+
+/* ---------- Overlay de la intro ---------- */
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.25rem, 5vw, 3rem);
+  overflow: hidden;
+  color: var(--color-crema);
+  background:
+    radial-gradient(ellipse at 50% -4%, rgba(244, 208, 63, 0.18), transparent 52%),
+    radial-gradient(ellipse at 12% 96%, rgba(46, 90, 68, 0.42), transparent 58%),
+    radial-gradient(ellipse at 88% 78%, rgba(95, 143, 116, 0.16), transparent 55%),
+    linear-gradient(180deg, #050a1a 0%, #0f1a3a 52%, #1b2f5e 100%);
+  opacity: 1;
+  transition: opacity 1.35s var(--ease-soft);
+}
+
+.intro-overlay.is-lista {
+  display: flex;
+}
+
+/* Cielo estrellado propio de la intro, con un latido muy lento */
+.intro-overlay::before {
+  content: "";
+  position: absolute;
+  inset: -8%;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1.6px 1.6px at 12% 18%, rgba(249, 246, 240, 0.9), transparent 60%),
+    radial-gradient(1.2px 1.2px at 27% 62%, rgba(244, 208, 63, 0.85), transparent 60%),
+    radial-gradient(1.7px 1.7px at 42% 12%, rgba(249, 246, 240, 0.75), transparent 60%),
+    radial-gradient(1px 1px at 58% 38%, rgba(249, 246, 240, 0.8), transparent 60%),
+    radial-gradient(1.5px 1.5px at 73% 22%, rgba(244, 208, 63, 0.7), transparent 60%),
+    radial-gradient(1.1px 1.1px at 86% 58%, rgba(249, 246, 240, 0.85), transparent 60%),
+    radial-gradient(1.3px 1.3px at 68% 78%, rgba(249, 246, 240, 0.6), transparent 60%),
+    radial-gradient(1px 1px at 18% 86%, rgba(244, 208, 63, 0.65), transparent 60%),
+    radial-gradient(1.2px 1.2px at 92% 88%, rgba(249, 246, 240, 0.55), transparent 60%);
+  animation: intro-stars 9s ease-in-out infinite alternate;
+}
+
+/* Halo cálido detrás del título */
+.intro-overlay::after {
+  content: "";
+  position: absolute;
+  top: 44%;
+  left: 50%;
+  width: min(90vw, 760px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  background:
+    radial-gradient(closest-side, rgba(244, 208, 63, 0.14), transparent 70%),
+    radial-gradient(closest-side, rgba(46, 90, 68, 0.3), transparent 78%);
+  filter: blur(10px);
+}
+
+/* Al ganar, el overlay se desvanece y deja ver el jardín */
+.intro-overlay.is-saliendo {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.intro-overlay.is-terminado {
+  display: none;
+}
+
+/* ---------- Pantalla de bienvenida ---------- */
+.intro-pantalla {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(44rem, 100%);
+  text-align: center;
+  animation: intro-in 1.1s var(--ease-soft) both;
+}
+
+/* Órbita decorativa, como una constelación alrededor del título */
+.intro-pantalla::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: -1;
+  width: min(80vw, 620px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(244, 208, 63, 0.14);
+  border-radius: 50%;
+  box-shadow: inset 0 0 130px rgba(244, 208, 63, 0.07);
+  pointer-events: none;
+}
+
+.intro-eyebrow {
+  margin-bottom: var(--space-md);
+  font-size: clamp(0.66rem, 2.2vw, 0.78rem);
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-estrella);
+}
+
+.intro-eyebrow::before,
+.intro-eyebrow::after {
+  content: "✦";
+  margin: 0 0.65rem;
+  font-size: 0.72em;
+  color: rgba(244, 208, 63, 0.6);
+}
+
+.intro-titulo {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.8rem, 10vw, 6rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--color-crema);
+  text-wrap: balance;
+}
+
+.intro-titulo em {
+  display: inline-block;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--color-estrella);
+  text-shadow: 0 0 42px rgba(244, 208, 63, 0.32);
+}
+
+.intro-texto {
+  max-width: 34rem;
+  margin-top: var(--space-md);
+  font-size: clamp(0.92rem, 2.4vw, 1.04rem);
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--color-crema-tenue);
+  text-wrap: pretty;
+}
+
+.intro-boton {
+  margin-top: var(--space-lg);
+  padding: 1rem 2.4rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.18em;
+  animation: intro-boton-latido 4.5s ease-in-out infinite;
+}
+
+.intro-nota {
+  margin-top: 1.1rem;
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(249, 246, 240, 0.45);
+}
+
+/* ---------- Escenario del juego ---------- */
+.juego-escenario {
+  position: absolute;
+  inset: 0;
+  display: none;
+}
+
+.intro-overlay.is-jugando {
+  padding: 0;
+  background: #050a1a;
+}
+
+.intro-overlay.is-jugando::before,
+.intro-overlay.is-jugando::after {
+  display: none;
+}
+
+.intro-overlay.is-jugando .intro-pantalla {
+  display: none;
+}
+
+.intro-overlay.is-jugando .juego-escenario {
+  display: block;
+}
+
+.juego-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: pointer;
+}
+
+/* Marcador y ayuda, flotando sobre el canvas sin tapar los toques */
+.juego-hud {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  padding: clamp(1rem, 3.5vw, 2.25rem) 1rem 0;
+  pointer-events: none;
+}
+
+.juego-contador {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  padding: 0.55rem 1.3rem;
+  border: 1px solid rgba(244, 208, 63, 0.34);
+  border-radius: var(--radius-pill);
+  background: rgba(8, 15, 38, 0.74);
+  box-shadow:
+    0 12px 30px rgba(2, 6, 16, 0.45),
+    inset 0 0 0 1px rgba(249, 246, 240, 0.04);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.juego-contador-etiqueta {
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-crema-tenue);
+}
+
+.juego-contador-valor {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  line-height: 1;
+  color: var(--color-estrella);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Pequeño latido del contador al recoger una flor */
+.juego-contador-valor.is-latido {
+  animation: marcador-latido 0.45s var(--ease-soft);
+}
+
+.juego-contador-total {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: rgba(249, 246, 240, 0.55);
+}
+
+.juego-ayuda {
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-align: center;
+  text-transform: uppercase;
+  color: rgba(249, 246, 240, 0.55);
+  text-shadow: 0 2px 10px rgba(2, 6, 16, 0.8);
+  transition: opacity 0.4s ease;
+}
+
+/* En la victoria la ayuda desaparece: solo queda el mensaje y su botón */
+.intro-overlay.is-victoria .juego-ayuda {
+  opacity: 0;
+}
+
+/* ---------- Mensaje de victoria o derrota ---------- */
+.juego-mensaje {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  width: min(30rem, calc(100% - 2.5rem));
+  padding: clamp(1.4rem, 4vw, 2.2rem);
+  border: 1px solid rgba(244, 208, 63, 0.4);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(244, 208, 63, 0.16), transparent 62%),
+    rgba(8, 15, 38, 0.95);
+  box-shadow: 0 28px 70px rgba(2, 6, 16, 0.68);
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, calc(-50% + 14px));
+  transition: opacity 0.45s ease, transform 0.45s var(--ease-soft), visibility 0.45s;
+}
+
+.juego-mensaje.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%);
+}
+
+.juego-mensaje-titulo {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  line-height: 1.15;
+  color: var(--color-estrella);
+}
+
+.juego-mensaje-texto {
+  font-size: 0.92rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--color-crema-tenue);
+  text-wrap: pretty;
+}
+
+/* Cursor de la máquina de escribir del mensaje final. */
+.juego-mensaje-texto.is-escribiendo::after {
+  content: "▌";
+  margin-left: 0.08em;
+  color: var(--color-estrella);
+  animation: mensaje-caret 0.85s steps(1) infinite;
+}
+
+.juego-reintentar {
+  margin-top: 0.5rem;
+}
+
+.juego-reintentar[hidden] {
+  display: none;
+}
+
+/* Botón de victoria: grande, dorado y sin transición automática.
+   El jardín solo se revela cuando ella decide entrar. */
+.juego-continuar {
+  margin-top: 1.15rem;
+  padding: 1.05rem 2.8rem;
+  font-size: 0.88rem;
+  letter-spacing: 0.2em;
+  box-shadow: 0 18px 46px rgba(244, 208, 63, 0.3);
+}
+
+.juego-continuar[hidden] {
+  display: none;
+}
+
+/* Mientras la explosión aún cae, el botón espera paciente */
+.juego-continuar:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+  filter: saturate(0.55);
+}
+
+/* ---------- Keyframes de la intro ---------- */
+@keyframes intro-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes intro-stars {
+  from {
+    opacity: 0.55;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(-1%, 1%, 0);
+  }
+}
+
+@keyframes intro-boton-latido {
+  0%, 100% {
+    box-shadow: 0 14px 34px rgba(244, 208, 63, 0.22);
+  }
+  50% {
+    box-shadow: 0 18px 46px rgba(244, 208, 63, 0.42);
+  }
+}
+
+/* Solo opacidad: animar transform en este contenedor convertiría
+   al wrapper en el marco de referencia del header y del modal fijos. */
+@keyframes contenido-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------- Responsive de la intro ---------- */
+@media (max-width: 560px) {
+  .intro-eyebrow::before,
+  .intro-eyebrow::after {
+    margin: 0 0.35rem;
+  }
+
+  .intro-texto {
+    font-size: 0.9rem;
+  }
+
+  .juego-contador {
+    padding: 0.45rem 1rem;
+  }
+
+  .juego-ayuda {
+    max-width: 16rem;
+  }
+}
+
+/* Móvil en horizontal: la intro necesita menos aire vertical */
+@media (max-height: 560px) and (orientation: landscape) {
+  .intro-overlay {
+    padding: 1rem;
+  }
+
+  .intro-titulo {
+    font-size: clamp(2rem, 6vw, 3rem);
+  }
+
+  .intro-texto {
+    margin-top: 0.75rem;
+    max-width: 40rem;
+  }
+
+  .intro-boton {
+    margin-top: 1.25rem;
+  }
+
+  .intro-nota {
+    margin-top: 0.6rem;
+  }
+
+  .juego-hud {
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+    padding-top: 0.75rem;
+  }
+}
+
+
+/* ============================================================
+   21. Enmienda del juego: plataformas, jefe y controles táctiles
+   ============================================================ */
+
+/* Utilidad accesible para textos que solo deben leer los lectores */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Botón casi invisible para saltar la aventura completa */
+.juego-saltar {
+  position: absolute;
+  top: clamp(0.8rem, 2.5vh, 1.5rem);
+  right: clamp(0.8rem, 2.5vw, 1.6rem);
+  z-index: 20;
+  padding: 0.5rem 0.95rem;
+  border: 1px solid rgba(249, 246, 240, 0.22);
+  border-radius: var(--radius-pill);
+  background: rgba(8, 15, 38, 0.42);
+  font-family: var(--font-body);
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(249, 246, 240, 0.7);
+  cursor: pointer;
+  opacity: 0.1;
+  transition: opacity 0.35s ease, color 0.35s ease, border-color 0.35s ease,
+    background-color 0.35s ease;
+}
+
+.juego-saltar:hover,
+.juego-saltar:focus-visible {
+  opacity: 0.8;
+  border-color: rgba(244, 208, 63, 0.55);
+  background: rgba(8, 15, 38, 0.82);
+  color: var(--color-estrella);
+}
+
+/* Fila superior del HUD: flores y vidas */
+.juego-hud-superior {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+}
+
+.juego-vidas {
+  padding: 0.55rem 0.95rem;
+  border: 1px solid rgba(242, 127, 165, 0.32);
+  border-radius: var(--radius-pill);
+  background: rgba(8, 15, 38, 0.62);
+  font-family: var(--font-display);
+  font-size: clamp(0.85rem, 2.4vw, 1.05rem);
+  letter-spacing: 0.22em;
+  line-height: 1;
+  color: #f27fa5;
+  text-shadow: 0 0 14px rgba(242, 127, 165, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Insignia del escudo dorado que entrega el orbe de la arena. */
+.juego-escudo {
+  padding: 0.5rem 0.85rem;
+  border: 1px solid rgba(244, 208, 63, 0.65);
+  border-radius: var(--radius-pill);
+  background: rgba(8, 15, 38, 0.72);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-estrella);
+  text-shadow: 0 0 14px rgba(244, 208, 63, 0.7);
+  box-shadow: 0 0 22px rgba(244, 208, 63, 0.28);
+  animation: control-lanzar-latido 2.2s ease-in-out infinite;
+}
+
+.juego-escudo[hidden] {
+  display: none;
+}
+
+/* Barra de vida del jefe (100 puntos) con sus tres fases */
+.juego-jefe {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.4rem;
+  width: min(31rem, calc(100vw - 2.5rem));
+  padding: 0.55rem 1rem 0.6rem;
+  border: 1px solid rgba(126, 87, 194, 0.5);
+  border-radius: var(--radius-lg);
+  background: rgba(12, 8, 26, 0.82);
+  box-shadow: 0 12px 30px rgba(2, 6, 16, 0.45), 0 0 26px rgba(126, 87, 194, 0.18);
+  animation: jefe-hud-in 0.6s var(--ease-soft) both;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.juego-jefe[hidden] {
+  display: none;
+}
+
+/* El escudo de sombra tiñe el HUD de azul dorado mientras protege al jefe */
+.juego-jefe.is-escudo {
+  border-color: rgba(126, 194, 245, 0.65);
+  box-shadow: 0 12px 30px rgba(2, 6, 16, 0.45), 0 0 30px rgba(126, 194, 245, 0.28);
+}
+
+.juego-jefe.is-escudo .jefe-vida-relleno {
+  background: linear-gradient(90deg, #4fc3f7, #f4d03f 58%, #f9f6f0);
+  box-shadow: 0 0 18px rgba(79, 195, 247, 0.65);
+}
+
+.juego-jefe.is-escudo .jefe-fase {
+  color: #b9e6ff;
+}
+
+.juego-jefe.is-escudo .jefe-recompensa {
+  color: #e7d7ff;
+  text-shadow: 0 0 14px rgba(126, 194, 245, 0.35);
+}
+
+/* La fase II enciende el HUD en rosa; la III, en rojo tormenta */
+.juego-jefe.is-fase-2 {
+  border-color: rgba(242, 127, 165, 0.6);
+  box-shadow: 0 12px 30px rgba(2, 6, 16, 0.45), 0 0 30px rgba(242, 127, 165, 0.24);
+}
+
+.juego-jefe.is-fase-3 {
+  border-color: rgba(230, 58, 36, 0.7);
+  box-shadow: 0 12px 30px rgba(2, 6, 16, 0.45), 0 0 34px rgba(230, 58, 36, 0.3);
+}
+
+.jefe-cabecera {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.juego-jefe-nombre {
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #cbb6f5;
+}
+
+.jefe-vida-texto {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  line-height: 1;
+  color: var(--color-estrella);
+  font-variant-numeric: tabular-nums;
+}
+
+.jefe-vida {
+  position: relative;
+  width: 100%;
+  height: 0.72rem;
+  overflow: hidden;
+  border: 1px solid rgba(249, 246, 240, 0.16);
+  border-radius: var(--radius-pill);
+  background: rgba(2, 6, 16, 0.72);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.jefe-vida-relleno {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #7e57c2, #f27fa5 62%, #f4d03f);
+  box-shadow: 0 0 16px rgba(242, 127, 165, 0.55);
+  transform: scaleX(1);
+  transform-origin: left center;
+  transition: transform 0.35s var(--ease-soft), background 0.5s ease,
+    box-shadow 0.5s ease;
+}
+
+.juego-jefe.is-fase-2 .jefe-vida-relleno {
+  background: linear-gradient(90deg, #f27fa5, #f4d03f);
+}
+
+.juego-jefe.is-fase-3 .jefe-vida-relleno {
+  background: linear-gradient(90deg, #c92a19, #f27fa5 70%, #f4d03f);
+  box-shadow: 0 0 18px rgba(230, 58, 36, 0.65);
+}
+
+.jefe-fase {
+  font-size: 0.54rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-align: center;
+  text-transform: uppercase;
+  color: rgba(249, 246, 240, 0.55);
+  transition: color 0.35s ease;
+}
+
+.juego-jefe.is-fase-2 .jefe-fase {
+  color: #f2a8c2;
+}
+
+.juego-jefe.is-fase-3 .jefe-fase {
+  color: #ff9b8a;
+}
+
+/* Recompensa desbloqueada en cada fase (doble salto / disparo rápido) */
+.jefe-recompensa {
+  margin-top: 0.1rem;
+  font-size: 0.56rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-align: center;
+  text-transform: uppercase;
+  color: rgba(203, 182, 245, 0.85);
+  transition: color 0.35s ease, text-shadow 0.35s ease;
+}
+
+.juego-jefe.is-fase-2 .jefe-recompensa {
+  color: #f2a8c2;
+  text-shadow: 0 0 14px rgba(242, 127, 165, 0.45);
+}
+
+.juego-jefe.is-fase-3 .jefe-recompensa {
+  color: #ffb347;
+  text-shadow: 0 0 16px rgba(255, 179, 71, 0.55);
+}
+
+/* Viñeta de batalla: la arena se tiñe de sombra mientras dura el combate */
+.juego-escenario::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 42%, transparent 46%, rgba(3, 4, 14, 0.5) 100%),
+    linear-gradient(0deg, rgba(40, 10, 58, 0.2), transparent 38%);
+  opacity: 0;
+  transition: opacity 1.1s var(--ease-soft);
+}
+
+.intro-overlay.is-jefe .juego-escenario::after {
+  opacity: 1;
+}
+
+/* Cuando el escudo se rompe, la arena se enciende en rojo tormenta */
+.intro-overlay.is-enfurecido .juego-escenario::after {
+  background:
+    radial-gradient(ellipse at 50% 38%, transparent 34%, rgba(42, 2, 18, 0.72) 100%),
+    linear-gradient(0deg, rgba(150, 24, 60, 0.28), transparent 46%),
+    linear-gradient(180deg, rgba(74, 10, 44, 0.24), transparent 34%);
+  animation: arena-enfurecida 3.4s ease-in-out infinite alternate;
+}
+
+/* Destello blanco de la explosión final del Guardián */
+.juego-destello {
+  position: absolute;
+  inset: 0;
+  z-index: 14;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.juego-destello.is-activo {
+  animation: destello-final 0.95s ease-out both;
+}
+
+/* Aviso poético de recompensa (doble salto, disparo rápido…) */
+.juego-aviso {
+  position: absolute;
+  top: 34%;
+  left: 50%;
+  z-index: 5;
+  width: min(26rem, calc(100vw - 3rem));
+  padding: 0.7rem 1.2rem;
+  border: 1px solid rgba(244, 208, 63, 0.45);
+  border-radius: var(--radius-pill);
+  background: rgba(8, 15, 38, 0.88);
+  box-shadow: 0 16px 40px rgba(2, 6, 16, 0.6), 0 0 26px rgba(244, 208, 63, 0.18);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--color-estrella);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, 8px);
+  transition: opacity 0.4s ease, transform 0.4s var(--ease-soft);
+}
+
+.juego-aviso.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* Cortina negra de la transición entre niveles */
+.juego-transicion {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: #000;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.45s ease, visibility 0.45s ease;
+}
+
+.juego-transicion.is-activa {
+  opacity: 1;
+  visibility: visible;
+}
+
+.juego-transicion-texto {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 4.5vw, 2.4rem);
+  font-style: italic;
+  letter-spacing: 0.06em;
+  color: rgba(244, 208, 63, 0.9);
+  text-shadow: 0 0 34px rgba(244, 208, 63, 0.4);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.8s ease 0.15s, transform 0.8s var(--ease-soft) 0.15s;
+}
+
+.juego-transicion.is-activa .juego-transicion-texto {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Controles táctiles flotantes. Se separan de los bordes con el área
+   segura del móvil para que nunca queden bajo la barra del sistema. */
+.juego-controles {
+  position: absolute;
+  right: 0;
+  bottom: calc(clamp(1rem, 4vh, 2.4rem) + env(safe-area-inset-bottom, 0px));
+  left: 0;
+  z-index: 6;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0 clamp(1rem, 4vw, 2.5rem);
+  pointer-events: none;
+}
+
+.control-grupo {
+  display: flex;
+  gap: 0.6rem;
+  pointer-events: auto;
+}
+
+.control-boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(3.25rem, 11vw, 4rem);
+  height: clamp(3.25rem, 11vw, 4rem);
+  min-width: 52px;
+  min-height: 52px;
+  border: 1px solid rgba(244, 208, 63, 0.4);
+  border-radius: 50%;
+  background: rgba(8, 15, 38, 0.58);
+  font-family: var(--font-body);
+  font-size: 1.2rem;
+  color: var(--color-estrella);
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
+  box-shadow: 0 10px 24px rgba(2, 6, 16, 0.4);
+  transition: transform 0.15s ease, background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.control-boton:active {
+  transform: scale(0.93);
+  border-color: rgba(244, 208, 63, 0.85);
+  background: rgba(244, 208, 63, 0.18);
+}
+
+.control-boton[hidden] {
+  display: none;
+}
+
+.control-boton--salto {
+  border-color: rgba(242, 127, 165, 0.5);
+  color: #ffd7e6;
+}
+
+.control-boton--lanzar {
+  border-color: rgba(244, 208, 63, 0.65);
+  color: var(--color-estrella);
+  animation: control-lanzar-latido 2.2s ease-in-out infinite;
+}
+
+/* En dispositivos con ratón fino estorban: los controles son para táctil */
+@media (hover: hover) and (pointer: fine) {
+  .juego-controles {
+    display: none;
+  }
+}
+
+/* Durante el mensaje de victoria o derrota no hay controles */
+.intro-overlay.is-victoria .juego-controles,
+.intro-overlay.is-derrota .juego-controles {
+  display: none;
+}
+
+@keyframes mensaje-caret {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes jefe-hud-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes control-lanzar-latido {
+  0%, 100% {
+    box-shadow: 0 10px 24px rgba(2, 6, 16, 0.4), 0 0 0 rgba(244, 208, 63, 0);
+  }
+  50% {
+    box-shadow: 0 10px 24px rgba(2, 6, 16, 0.4), 0 0 22px rgba(244, 208, 63, 0.38);
+  }
+}
+
+@keyframes arena-enfurecida {
+  from {
+    filter: saturate(1);
+  }
+  to {
+    filter: saturate(1.35) brightness(1.08);
+  }
+}
+
+@keyframes destello-final {
+  0% {
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.96;
+  }
+  38% {
+    opacity: 0.42;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ============================================================
+   22. Final cinematográfico del memorama (Feature 004)
+   ============================================================ */
+
+/* El fondo de la sección se apaga cuando el final toma la pantalla */
+.juegos-section.is-final .section-inner {
+  opacity: 0.24;
+  filter: brightness(0.5) blur(1px);
+  transition: opacity 1.2s var(--ease-soft), filter 1.2s var(--ease-soft);
+}
+
+.final-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.5rem, 6vw, 4rem);
+  overflow: hidden;
+  color: var(--color-crema);
+  background:
+    radial-gradient(ellipse at 50% 8%, rgba(244, 208, 63, 0.16), transparent 52%),
+    radial-gradient(ellipse at 12% 88%, rgba(46, 90, 68, 0.42), transparent 58%),
+    radial-gradient(ellipse at 90% 72%, rgba(126, 87, 194, 0.24), transparent 58%),
+    linear-gradient(180deg, rgba(2, 5, 14, 0.98), rgba(8, 15, 38, 0.98) 55%, rgba(15, 26, 58, 0.98));
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 1s ease, visibility 1s ease;
+}
+
+.final-overlay[hidden] {
+  display: none;
+}
+
+.final-overlay.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Cielo de estrellas propio, más denso que el del resto de la página */
+.final-estrellas {
+  position: absolute;
+  inset: -12%;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1.8px 1.8px at 8% 14%, rgba(249, 246, 240, 0.95), transparent 60%),
+    radial-gradient(1.2px 1.2px at 18% 42%, rgba(244, 208, 63, 0.9), transparent 60%),
+    radial-gradient(1.5px 1.5px at 27% 76%, rgba(249, 246, 240, 0.7), transparent 60%),
+    radial-gradient(1px 1px at 36% 22%, rgba(249, 246, 240, 0.85), transparent 60%),
+    radial-gradient(1.9px 1.9px at 47% 56%, rgba(244, 208, 63, 0.8), transparent 60%),
+    radial-gradient(1.1px 1.1px at 58% 12%, rgba(249, 246, 240, 0.75), transparent 60%),
+    radial-gradient(1.4px 1.4px at 66% 86%, rgba(249, 246, 240, 0.8), transparent 60%),
+    radial-gradient(1px 1px at 76% 34%, rgba(244, 208, 63, 0.8), transparent 60%),
+    radial-gradient(1.7px 1.7px at 84% 66%, rgba(249, 246, 240, 0.75), transparent 60%),
+    radial-gradient(1.2px 1.2px at 93% 18%, rgba(244, 208, 63, 0.7), transparent 60%),
+    radial-gradient(1.3px 1.3px at 12% 92%, rgba(249, 246, 240, 0.6), transparent 60%),
+    radial-gradient(1px 1px at 72% 8%, rgba(244, 208, 63, 0.55), transparent 60%);
+  animation: final-stars 12s ease-in-out infinite alternate;
+}
+
+.final-petalos {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* La lluvia del final usa los mismos pétalos del memorama */
+.final-petalos .petalo {
+  top: -12%;
+  filter: drop-shadow(0 0 6px rgba(244, 208, 63, 0.18));
+  box-shadow: none;
+}
+
+.final-fuegos {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.final-contenido {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(46rem, 100%);
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 0 0.5rem;
+  text-align: center;
+  scrollbar-width: thin;
+  animation: final-contenido-in 1.4s var(--ease-soft) both;
+}
+
+.final-eyebrow {
+  margin-bottom: var(--space-md);
+  font-size: clamp(0.62rem, 2vw, 0.74rem);
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-estrella);
+}
+
+.final-eyebrow::before,
+.final-eyebrow::after {
+  content: "✦";
+  margin: 0 0.6rem;
+  font-size: 0.7em;
+  color: rgba(244, 208, 63, 0.65);
+}
+
+.final-titulo {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.2rem, 7.5vw, 4.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--color-crema);
+  text-wrap: balance;
+  text-shadow: 0 0 60px rgba(244, 208, 63, 0.18);
+}
+
+.final-texto {
+  max-width: 34rem;
+  min-height: 8.5em;
+  margin-top: var(--space-lg);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.05rem, 2.8vw, 1.4rem);
+  line-height: 1.85;
+  white-space: pre-line;
+  color: rgba(249, 246, 240, 0.9);
+  text-wrap: pretty;
+}
+
+/* El cursor de la máquina de escribir solo existe mientras escribe */
+.final-texto.is-escribiendo::after {
+  content: "|";
+  margin-left: 0.12em;
+  font-style: normal;
+  color: var(--color-estrella);
+  animation: final-caret 0.85s step-end infinite;
+}
+
+.final-boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.4rem;
+  margin-top: var(--space-lg);
+  padding: 1rem 3.2rem;
+  border: 1px solid rgba(249, 246, 240, 0.4);
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, #fff6cf, #f4d03f 46%, #f27fa5);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #160f2b;
+  cursor: pointer;
+  box-shadow: 0 18px 50px rgba(244, 208, 63, 0.34);
+  animation: final-boton-in 0.8s var(--ease-soft) both,
+    final-boton-brillo 2.6s 0.8s ease-in-out infinite;
+}
+
+.final-boton:hover,
+.final-boton:focus-visible {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 24px 64px rgba(244, 208, 63, 0.5);
+}
+
+.final-boton[hidden] {
+  display: none;
+}
+
+.final-cerrar {
+  position: absolute;
+  top: clamp(0.9rem, 3vw, 1.6rem);
+  right: clamp(0.9rem, 3vw, 1.6rem);
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid rgba(249, 246, 240, 0.24);
+  border-radius: 50%;
+  background: rgba(8, 15, 38, 0.5);
+  font-size: 0.85rem;
+  color: rgba(249, 246, 240, 0.75);
+  cursor: pointer;
+  opacity: 0.35;
+  transition: opacity 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.final-cerrar:hover,
+.final-cerrar:focus-visible {
+  opacity: 1;
+  border-color: rgba(244, 208, 63, 0.6);
+  color: var(--color-estrella);
+}
+
+/* Bloquea el scroll de la página mientras el final está abierto */
+body.final-abierto {
+  overflow: hidden;
+}
+
+@keyframes final-stars {
+  from {
+    opacity: 0.62;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(-1.2%, 0.8%, 0) scale(1.02);
+  }
+}
+
+@keyframes final-contenido-in {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes final-caret {
+  0%, 55% {
+    opacity: 1;
+  }
+  56%, 100% {
+    opacity: 0;
+  }
+}
+
+@keyframes final-boton-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes final-boton-brillo {
+  0%, 100% {
+    box-shadow: 0 18px 50px rgba(244, 208, 63, 0.34);
+  }
+  50% {
+    box-shadow: 0 18px 50px rgba(244, 208, 63, 0.34),
+      0 0 56px rgba(244, 208, 63, 0.34);
+  }
+}
+
+/* Responsive del cierre cinematográfico */
+@media (max-width: 640px) {
+  .final-texto {
+    min-height: 10em;
+    margin-top: var(--space-md);
+    font-size: 1rem;
+  }
+
+  .final-boton {
+    padding: 0.95rem 2.4rem;
+    font-size: 0.8rem;
+  }
+
+  .juego-hud-superior {
+    gap: 0.45rem;
+  }
+
+  .juego-vidas {
+    padding: 0.45rem 0.7rem;
+    letter-spacing: 0.16em;
+  }
+}
+
+@media (max-height: 560px) and (orientation: landscape) {
+  .final-texto {
+    min-height: 5em;
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  .final-boton {
+    margin-top: 1.2rem;
+  }
+
+  .juego-controles {
+    bottom: 0.75rem;
+  }
+}
